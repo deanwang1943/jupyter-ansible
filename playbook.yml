@@ -1,0 +1,65 @@
+---
+- hosts: all
+  tasks:
+    - name: Install the httpd rpm
+      yum: name=httpd
+      become: yes
+    - name: Install the gcc
+      yum: name=gcc
+      become: yes
+    - name: Install the python-devel
+      yum: name=python-devel
+      become: yes
+    - name: Install git
+      yum: name=git
+      become: yes
+    - name: Install epel release
+      yum: name=epel-release
+      become: yes
+    - name: Install python setuptools
+      yum: name=python-setuptools
+      become: yes
+    - name: install pip
+      yum: name=python-pip
+      become: yes
+    - name: install numpy
+      pip: name=numpy
+      become: yes
+    - name: install pandas
+      pip: name=pandas
+      become: yes
+    - name: install matplotlib
+      yum: name=python-matplotlib
+      become: yes
+    - name: install scikit-learn
+      pip: name=scikit-learn
+      become: yes
+    - name: install scipy
+      pip: name=scipy
+      become: yes
+    - name: install jupyter
+      pip: name=jupyter
+      become: yes
+    - name: create titanic service
+      become: yes
+      template:
+        src: templates/jupyter.service.j2
+        dest: /etc/systemd/system/jupyter.service
+        mode: 0644
+    - name: create jupyter httpd conf
+      become: yes
+      template:
+        src: templates/jupyter.conf.j2
+        dest: /etc/httpd/conf.d/jupyter.conf
+        mode: 0644
+    - name: git clone titanic
+      become: yes
+      git:
+        repo: 'https://github.com/glenlivet/titanic_survival_exploration.git'
+        dest: /srv/checkout/titanic
+    - name: start the httpd service
+      service: name=httpd state=restarted
+      become: yes
+    - name: start jupyter notebook
+      service: name=jupyter state=started
+      become: yes
