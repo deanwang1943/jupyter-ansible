@@ -40,6 +40,11 @@
     - name: install jupyter
       pip: name=jupyter
       become: yes
+    - name: set default password for jupyter notebook
+      become: yes
+      template:
+        src: templates/jupyter_notebook_config.json
+        dest: /home/centos/.jupyter/jupyter_notebook_config.json
     - name: create titanic service
       become: yes
       template:
