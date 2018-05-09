@@ -58,7 +58,7 @@
         repo: 'https://github.com/glenlivet/titanic_survival_exploration.git'
         dest: /srv/checkout/titanic
     - name: start the httpd service
-      service: name=httpd state=restarted
+      service: name=httpd state=started
       become: yes
     - name: start jupyter notebook
       service: name=jupyter state=started
